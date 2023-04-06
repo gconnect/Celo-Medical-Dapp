@@ -14,8 +14,10 @@ export const addPatient = async (address: string | null | undefined,
     from: address,
     })
     console.log(txHash)
+    return {sucesss: true, data: txHash.transactionHash}
   } catch (e) {
     console.log(e)
+    return {sucesss: false, message: e.message}
   }
 }
 

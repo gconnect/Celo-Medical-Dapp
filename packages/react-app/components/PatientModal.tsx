@@ -3,6 +3,7 @@ import { addPatient } from '@/interact'
 import { useCelo } from '@celo/react-celo'
 import { pinFilesToPinata } from '@/Pinata/PinFiles'
 import { Label } from '@headlessui/react/dist/components/label/label'
+import { error } from 'console'
 
 
 export default function PatientModal(): JSX.Element {
@@ -17,8 +18,15 @@ export default function PatientModal(): JSX.Element {
     const [relationshipWithKin, setRelationshipWithKin] = useState<string>('')
     const [kinContact, setKinContact] = useState<string>('')
     const [image, setSelectedImage] = useState<string | File>('')
-  
-  const { kit, address } = useCelo()
+    const [successState, setSuccess] = useState<boolean>(false)
+    const [message, setMessage] = useState<any>()
+    const [dataValue, setData] = useState<string>('')
+    const [loading, setLoading] = useState<boolean>(false)
+    const [ipfsHashValue, setIPFSHASH] = useState<string>("")
+    const [blockSuccess, setBlockSuccess] = useState<boolean>(false)
+    const [blockMessage, setBlockMessage] = useState<any>()
+    const [showModal, setShowModal] = useState<false>()
+    const { kit, address } = useCelo()
   
    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files != null) {
@@ -61,10 +69,9 @@ export default function PatientModal(): JSX.Element {
       setKinContact(e.currentTarget.value)
     }
 
-
-
   const handleAddPatient = async () => {
-   const ipfshHash =  await pinFilesToPinata(        
+    setLoading(true)
+    const {isSuccess, hash, error} =  await pinFilesToPinata(        
         image,
         fullName,
         phoneNumber,
@@ -76,20 +83,32 @@ export default function PatientModal(): JSX.Element {
         kinFullName,
         relationshipWithKin,
         kinContact
-      )
-      await addPatient(address, kit, patientWalletAddress, ipfshHash)
-      window.location.reload()
+    )    
+    setIPFSHASH(hash)
+    setSuccess(isSuccess)
+    setMessage(error)
+
+    const { sucesss, data, message} = await addPatient(address, kit, patientWalletAddress, ipfsHashValue)
+    setBlockSuccess(sucesss)
+    setData(data)
+    setLoading(false)
+    setBlockMessage(message) 
+    setShowModal(false)
+      // window.location.reload()
+    document.getElementById('patientModal').style.display = 'none'
   }
 
   return (
-  <div>
-    <div
+    <div>
+      {successState ? <div className='bg-green-500'>{ipfsHashValue}</div> : <div className='bg-red-500'>{message}</div>}
+      {blockSuccess ? <div className='bg-green-500'>{dataValue}</div> : <div className='bg-red-500'>{blockMessage}</div>}
+      <div
       data-te-modal-init
-      className="fixed top-0 left-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+      className={"fixed top-0 left-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"}
       id="patientModal"
       tabIndex={-1}
       aria-labelledby="exampleModalCenterTitle"
-      aria-modal="true"
+      aria-modal="true" 
       role="dialog">
         <div
           data-te-modal-dialog-ref
@@ -125,7 +144,7 @@ export default function PatientModal(): JSX.Element {
             <div className="relative p-4">
               <label className='my-2'>Patient Information</label>
               <input type="text" placeholder='Full Name' className='border-2 p-2 mt-2 rounded-md w-full' value={fullName} onChange={handleFullName} />
-              <input type="text" placeholder='Phone Number' className='border-2 p-2 mt-2 rounded-md w-full' value={phoneNumber} onChange={handlePhoneNumber} />
+              <input type="tel" placeholder='Phone Number' className='border-2 p-2 mt-2 rounded-md w-full' value={phoneNumber} onChange={handlePhoneNumber} />
              <input type="text" placeholder='Gender' className='border-2 p-2 mt-2 rounded-md w-full' value={gender} onChange={handleGender}/>
               {/* <input type="text" placeholder='Residential Address' className='border-2 p-2 mt-2 rounded-md w-full' value={residentialAddress} onChange={handleResidentialAddress}/>
               <input type="text" placeholder='Gender' className='border-2 p-2 mt-2 rounded-md w-full' value={gender} onChange={handleGender}/>
@@ -156,8 +175,10 @@ export default function PatientModal(): JSX.Element {
                 type="button"
                 className="ml-1 inline-block rounded bg-primary px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
                 data-te-ripple-init
+                // aria-label={showModal ? null : "Close"}
+                data-te-dismiss={showModal ? true : false}
                 data-te-ripple-color="light">
-                Add patient
+               { loading ? "Loading..." :" Add patient"}
               </button>
             </div>
           </div>

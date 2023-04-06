@@ -50,8 +50,10 @@ export const pinFilesToPinata = async (
         }
       });
       console.log(res.data.IpfsHash);
-      return res.data.IpfsHash
+      const ipfshHash = res.data.IpfsHash
+      return {isSuccess: true, hash: ipfshHash}
     } catch (error) {
       console.log(error);
+     return {isSuccess: false, error: error.message}
     }
   };

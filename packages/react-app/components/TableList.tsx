@@ -60,7 +60,7 @@ export default function TableList(): JSX.Element {
                   <tbody>
                     {!pinnedList ? <div>Patients not yet added</div> : pinnedList.map((item, index) => <tr className="border-b dark:border-neutral-500" key={index}>
                       <td className="whitespace-nowrap px-6 py-4 font-medium">{index + 1}</td>
-                      <td className="whitespace-nowrap px-6 py-4 border rounded-full"><a href={`https://ipfs.io/ipfs/${item.patientIPFSHash}`}><Image src={`https://ipfs.io/ipfs/${item.ipfs_pin_hash}`} alt='pix' width={50} height={50} /></a></td>
+                      <td className="whitespace-nowrap px-6 py-4 border rounded-full"><a href={`https://ipfs.io/ipfs/${item.ipfs_pin_hash}`}><Image src={`https://ipfs.io/ipfs/${item.ipfs_pin_hash}`} alt='pix' width={50} height={50} /></a></td>
                       <td className="whitespace-nowrap px-6 py-4">{item.metadata.keyvalues['fullName']}</td>
                       <td className="whitespace-nowrap px-6 py-4">{item.metadata.keyvalues['phoneNumber']}</td>
                       <td className="whitespace-nowrap px-6 py-4">{item.metadata.keyvalues['gender']}</td>
