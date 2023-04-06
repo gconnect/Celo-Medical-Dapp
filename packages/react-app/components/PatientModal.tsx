@@ -4,6 +4,7 @@ import { useCelo } from '@celo/react-celo'
 import { pinFilesToPinata } from '@/Pinata/PinFiles'
 import { Label } from '@headlessui/react/dist/components/label/label'
 import { error } from 'console'
+import Alert from './Alert'
 
 
 export default function PatientModal(): JSX.Element {
@@ -95,13 +96,19 @@ export default function PatientModal(): JSX.Element {
     setBlockMessage(message) 
     setShowModal(false)
       // window.location.reload()
-    // document.getElementById('patientModal').style.display = 'none'
+    if (document.getElementById('patientModal') != null) {
+        document.getElementById('patientModal').style.display = 'none'
+    }
+  
   }
 
   return (
     <div>
-      {successState ? <div className='bg-green-500'>{ipfsHashValue}</div> : <div className='bg-red-500'>{message}</div>}
-      {blockSuccess ? <div className='bg-green-500'>{dataValue}</div> : <div className='bg-red-500'>{blockMessage}</div>}
+      {successState ? <Alert success={successState} error={message} data={ipfsHashValue} />
+        : <Alert success={successState} error={message} data={ipfsHashValue} />}
+      {blockSuccess ? <Alert success={blockSuccess} error={blockMessage} data={dataValue} />
+        : <Alert success={blockSuccess} error={blockMessage} data={dataValue} />}
+  
       <div
       data-te-modal-init
       className={"fixed top-0 left-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"}
@@ -175,8 +182,7 @@ export default function PatientModal(): JSX.Element {
                 type="button"
                 className="ml-1 inline-block rounded bg-primary px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
                 data-te-ripple-init
-                // aria-label={showModal ? null : "Close"}
-                data-te-modal-dismiss = {showModal ? false : true}
+                // data-te-modal-dismiss = {showModal ? false : true}
                 data-te-ripple-color="light">
                { loading ? "Loading..." :" Add patient"}
               </button>
