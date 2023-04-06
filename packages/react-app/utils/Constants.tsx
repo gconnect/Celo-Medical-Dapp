@@ -1,4 +1,4 @@
-const QUERYPRAM = "patients"
+const QUERYPRAM = "patients json"
 const CONTRACTADDRESS = "0x223B286EAe4722fFB7c935e52e4c7D5955e8E8d3";
 export {
   QUERYPRAM,

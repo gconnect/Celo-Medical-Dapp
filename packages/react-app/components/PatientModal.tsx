@@ -1,10 +1,11 @@
 import React, {useState} from 'react'
 import { addPatient } from '@/interact'
 import { useCelo } from '@celo/react-celo'
-import { pinFilesToPinata } from '@/Pinata/PinFiles'
+import { pinFilesToPinata, uploadJSONToIPFS } from '@/Pinata/PinFiles'
 import { Label } from '@headlessui/react/dist/components/label/label'
 import { error } from 'console'
 import Alert from './Alert'
+import { QUERYPRAM } from '@/utils/Constants'
 
 
 export default function PatientModal(): JSX.Element {
@@ -72,7 +73,7 @@ export default function PatientModal(): JSX.Element {
 
   const handleAddPatient = async () => {
     setLoading(true)
-    const {isSuccess, hash, error} =  await pinFilesToPinata(        
+    const { hash } =  await pinFilesToPinata(        
         image,
         fullName,
         phoneNumber,
@@ -84,8 +85,23 @@ export default function PatientModal(): JSX.Element {
         kinFullName,
         relationshipWithKin,
         kinContact
-    )    
-    setIPFSHASH(hash)
+    )
+ 
+  
+    const {isSuccess, error, pinataURL } = await uploadJSONToIPFS(
+        hash,
+        fullName,
+        phoneNumber,
+        residentialAddress,
+        gender,
+        cityState,
+        maritalStatus,
+        patientWalletAddress,
+        kinFullName,
+        relationshipWithKin,
+        kinContact)
+    
+    setIPFSHASH(pinataURL)
     setSuccess(isSuccess)
     setMessage(error)
 
@@ -99,16 +115,23 @@ export default function PatientModal(): JSX.Element {
     if (document.getElementById('patientModal') != null) {
         document.getElementById('patientModal').style.display = 'none'
     }
-  
   }
 
+  // if (successState || message) {
+  //   <Alert success={successState} error={message} data={ipfsHashValue} />
+  // }
+  // if (blockSuccess || blockMessage) {
+  //    <Alert success={blockSuccess} error={blockMessage} data={dataValue} />}
+  // }
   return (
+    
     <div>
-      {successState ? <Alert success={successState} error={message} data={ipfsHashValue} />
-        : <Alert success={successState} error={message} data={ipfsHashValue} />}
-      {blockSuccess ? <Alert success={blockSuccess} error={blockMessage} data={dataValue} />
-        : <Alert success={blockSuccess} error={blockMessage} data={dataValue} />}
-  
+      {successState || blockSuccess || blockMessage || message ?
+      <div>
+      <Alert success={successState} error={message} data={ipfsHashValue} />
+      <Alert success={blockSuccess} error={blockMessage} data={dataValue} />
+      </div> : null
+      }
       <div
       data-te-modal-init
       className={"fixed top-0 left-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"}

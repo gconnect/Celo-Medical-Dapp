@@ -16,7 +16,7 @@ export default function Alert(param: IParam): JSX.Element{
         {/* <strong className="mr-1">Holy guacamole! </strong> You should check in on
         some of those fields below. */}
 
-        {param.success ?
+        {param.success == true ?
           <span className="mr-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
