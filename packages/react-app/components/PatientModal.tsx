@@ -25,7 +25,7 @@ export default function PatientModal(): JSX.Element {
     const [ipfsHashValue, setIPFSHASH] = useState<string>("")
     const [blockSuccess, setBlockSuccess] = useState<boolean>(false)
     const [blockMessage, setBlockMessage] = useState<any>()
-    const [showModal, setShowModal] = useState<false>()
+    const [showModal, setShowModal] = useState<boolean>(false)
     const { kit, address } = useCelo()
   
    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,7 +95,7 @@ export default function PatientModal(): JSX.Element {
     setBlockMessage(message) 
     setShowModal(false)
       // window.location.reload()
-    document.getElementById('patientModal').style.display = 'none'
+    // document.getElementById('patientModal').style.display = 'none'
   }
 
   return (
@@ -176,7 +176,7 @@ export default function PatientModal(): JSX.Element {
                 className="ml-1 inline-block rounded bg-primary px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
                 data-te-ripple-init
                 // aria-label={showModal ? null : "Close"}
-                data-te-dismiss={showModal ? true : false}
+                data-te-modal-dismiss = {showModal ? false : true}
                 data-te-ripple-color="light">
                { loading ? "Loading..." :" Add patient"}
               </button>
