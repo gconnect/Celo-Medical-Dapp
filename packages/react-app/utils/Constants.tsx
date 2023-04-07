@@ -1,5 +1,5 @@
 const QUERYPRAM = "patients json"
-const CONTRACTADDRESS = "0x223B286EAe4722fFB7c935e52e4c7D5955e8E8d3";
+const CONTRACTADDRESS = "0xa35a1d639518ec54897D2fa252F0FAe79Fb3C85a";
 const JWT = `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`
 
 export {

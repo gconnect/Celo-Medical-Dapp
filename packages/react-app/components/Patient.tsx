@@ -6,8 +6,10 @@ export default function Patient(): JSX.Element {
   const [data, setData] = useState<any>()
 
   const fetchPatientData = async () => {
+    const url = "https://ipfs.io/ipfs/bafkreibk2w2vtlezm7vwwqcx7hjmqoyw5gzlitilswbaehkeqsrzzlehou"
+    const url2 = "https://ipfs.io/ipfs/bafkreicjmxc2drbgxtoidx6xfatbffyx46oiyo6ktipss6dhdermwtsoze"
     try {
-      const response = await axios.get("https://gateway.pinata.cloud/ipfs/bafkreibk2w2vtlezm7vwwqcx7hjmqoyw5gzlitilswbaehkeqsrzzlehou", {
+      const response = await axios.get(url, {
         headers: {
             Authorization: JWT
         },       
@@ -24,7 +26,7 @@ export default function Patient(): JSX.Element {
   })
   return (
     <div>
-      hello
+      { data && data.fullName }
       {/* <p>{data.fullName}</p>
       <p>{data.phoneNumber}</p>
       <p>{data.gender}</p>
