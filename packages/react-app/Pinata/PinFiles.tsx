@@ -1,7 +1,7 @@
 import { QUERYPRAM } from "@/utils/Constants";
 import axios from "axios";
+import { JWT } from '@/utils/Constants';
 
-const JWT = `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`
 
 // uploading image and extra meta data
 export const pinFilesToPinata = async (image : string | File) => {
@@ -69,6 +69,7 @@ export const uploadJSONToIPFS = async (
       "pinataMetadata": {
         name: QUERYPRAM,
         keyvalues: {
+          image,
           fullName,
           phoneNumber,
           // residentialAddress,
@@ -81,7 +82,8 @@ export const uploadJSONToIPFS = async (
           kinContact
         }
       },
-      "pinataContent": {
+        "pinataContent": {
+        image,
         fullName,
         phoneNumber,
         // residentialAddress,

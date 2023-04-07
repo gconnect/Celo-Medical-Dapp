@@ -5,6 +5,7 @@ import UpdateModal from './UpdateModal'
 import { PatientList } from '@/Pinata/ListPin'
 import Image from 'next/image'
 import { QUERYPRAM } from '@/utils/Constants'
+import Patient from './Patient'
 
 export default function TableList(): JSX.Element {
   const { kit, address } = useCelo()
@@ -33,6 +34,7 @@ export default function TableList(): JSX.Element {
   
   return (
     <div>
+      <Patient/>
       {pinnedList.length == 0 ? <div className='text-center text-xl'> No Patient added yet.</div> :
         <div className="flex flex-col">
           <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">

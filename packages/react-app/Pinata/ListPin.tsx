@@ -1,8 +1,8 @@
+import { JWT } from '@/utils/Constants';
 import axios  from 'axios';
 
 
 export const PatientList = async (queryParams: any) => {
-  const JWT = `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`
 
   const url = `https://api.pinata.cloud/data/pinList?metadata[name]=${queryParams}`;
 
