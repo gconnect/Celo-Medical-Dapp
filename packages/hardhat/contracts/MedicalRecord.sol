@@ -63,19 +63,20 @@ contract MedicalRecord {
         _; 
     }
 
-    function addPatient( 
+     function addPatient( 
         address _patientWalletAddress,
         string memory _patientIPFSHash
         
         ) public onlyOwner{
-        require(!isExist[_patientWalletAddress], "Patient record already exist");
+        require(isExist[_patientWalletAddress] != true, "Patient record already exist");
+        require(bytes(_patientIPFSHash).length > 0, "IPFS Hash required");
         uint256 _id = patientId.current();
         string[] memory arr;
         bytes32 txHash = blockhash(block.number);
         uint256 dateCreated = block.timestamp;
         patients.push(PatientData(_id,_patientWalletAddress, _patientIPFSHash, arr, txHash, dateCreated));
         patientId.increment();
-        isExist[_patientWalletAddress];
+        isExist[_patientWalletAddress] = true;
         emit LogPatientData(patientCount, _patientWalletAddress, _patientIPFSHash, txHash, dateCreated);
     }
 
@@ -87,7 +88,7 @@ contract MedicalRecord {
         pd.txHash = hash;
     }
 
-    function getAllpatients() public view onlyOwner returns(PatientData [] memory){
+    function getAllpatients() public view returns(PatientData [] memory){
         return patients;
     }
 
@@ -111,6 +112,7 @@ contract MedicalRecord {
     }
 
     function addPatientMedicalReport(address _patientWalletAddress, string memory _testResult) public onlyOwner{
+        require(bytes(_testResult).length > 0, "Enter a valid test result");
         bool patientExists = false;
         bytes32 txHash = blockhash(block.number);
         uint256 dateCreated = block.timestamp;

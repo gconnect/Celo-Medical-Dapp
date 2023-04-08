@@ -14,9 +14,12 @@ export default function UpdateModal(param : Iparam): JSX.Element {
     console.log(e.currentTarget.value)
   }
 
- const handlePatientReport= async (patientAddress : string) => {
+  const handlePatientReport = async (patientAddress: string) => {
+    if (!testResult) {
+      alert("field is required")
+      return
+   }
     await addPatientReport(address, kit, patientAddress, testResult )
-    window.location.reload()
   }
 
   return (

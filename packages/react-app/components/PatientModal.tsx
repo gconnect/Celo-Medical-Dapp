@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { addPatient } from '@/interact'
+import { addPatient, addHash, getAllpatients } from '@/interact'
 import { useCelo } from '@celo/react-celo'
 import { pinFilesToPinata, uploadJSONToIPFS } from '@/Pinata/PinFiles'
 import { Label } from '@headlessui/react/dist/components/label/label'
@@ -22,14 +22,15 @@ export default function PatientModal(): JSX.Element {
     const [image, setSelectedImage] = useState<string | File>('')
     const [successState, setSuccess] = useState<boolean>(false)
     const [message, setMessage] = useState<any>()
-    const [dataValue, setData] = useState<string>('')
+    const [dataValue, setData] = useState<string | undefined>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [ipfsHashValue, setIPFSHASH] = useState<string>("")
     const [blockSuccess, setBlockSuccess] = useState<boolean>(false)
     const [blockMessage, setBlockMessage] = useState<any>()
     const [showModal, setShowModal] = useState<boolean>(false)
+    const [errorMessage, setErrorMessage] = useState<string>("")
+
     const { kit, address } = useCelo()
-  
    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files != null) {
           setSelectedImage(e.target.files[0]); 
@@ -72,22 +73,15 @@ export default function PatientModal(): JSX.Element {
     }
 
   const handleAddPatient = async () => {
+
+    if (!fullName || !phoneNumber || !kinContact || !image || !gender || !patientWalletAddress) {
+      setErrorMessage("All Fields are required")
+      return;
+    }
+
     setLoading(true)
-    const { hash } =  await pinFilesToPinata(        
-        image,
-        fullName,
-        phoneNumber,
-        residentialAddress,
-        gender,
-        cityState,
-        maritalStatus,
-        patientWalletAddress,
-        kinFullName,
-        relationshipWithKin,
-        kinContact
-    )
- 
-  
+    const { hash } = await pinFilesToPinata(image)
+
     const {isSuccess, error, pinataURL } = await uploadJSONToIPFS(
         hash,
         fullName,
@@ -105,24 +99,24 @@ export default function PatientModal(): JSX.Element {
     setSuccess(isSuccess)
     setMessage(error)
 
-    const { sucesss, data, message} = await addPatient(address, kit, patientWalletAddress, ipfsHashValue)
+    const { sucesss, data, message} = await addPatient(address, kit, patientWalletAddress, pinataURL)
     setBlockSuccess(sucesss)
     setData(data)
-    setLoading(false)
     setBlockMessage(message) 
     setShowModal(false)
+    
+    await addHash(address, kit, data) 
+    
+    setLoading(false)
+
       // window.location.reload()
+    
     if (document.getElementById('patientModal') != null) {
         document.getElementById('patientModal').style.display = 'none'
     }
-  }
 
-  // if (successState || message) {
-  //   <Alert success={successState} error={message} data={ipfsHashValue} />
-  // }
-  // if (blockSuccess || blockMessage) {
-  //    <Alert success={blockSuccess} error={blockMessage} data={dataValue} />}
-  // }
+  }
+  
   return (
     
     <div>
@@ -188,7 +182,7 @@ export default function PatientModal(): JSX.Element {
               {/* <input type="text" placeholder='Next of Kin Full Name' className='border-2 p-2 mt-2 rounded-md w-full' value={kinFullName} onChange={handleKinFullName} /> */}
               {/* <input type="text" placeholder='Relationship With Next of Kin' className='border-2 p-2 mt-2 rounded-md w-full' value={relationshipWithKin} onChange={handleRelationshipWithKin}/> */}
               <input type="text" placeholder='Next of Kin Phone Contat' className='border-2 p-2 mt-2 rounded-md w-full' value={kinContact} onChange={handleKinContact}/>
-
+              <p className='text-red-500'>{ errorMessage}</p>
             </div>
             <div
               className="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">

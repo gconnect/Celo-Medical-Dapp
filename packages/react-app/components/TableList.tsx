@@ -1,20 +1,26 @@
-import React,{ useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useCelo } from '@celo/react-celo'
 import { getAllpatients, addPatientReport } from '@/interact'
 import UpdateModal from './UpdateModal'
 import { PatientList } from '@/Pinata/ListPin'
 import Image from 'next/image'
-import { QUERYPRAM } from '@/utils/Constants'
+import { CONTRACTOWNER, QUERYPRAM } from '@/utils/Constants'
 import Patient from './Patient'
+import { truncate } from '@/utils/truncate'
+import LoadingImage from "../public/images/loading.gif"
+import { formateDateTime } from '@/utils/formatDateTime'
 
 export default function TableList(): JSX.Element {
   const { kit, address } = useCelo()
   const [patients, setPatients] = useState<any[]>([])
   const [pinnedList, setPinnedList] = useState<any[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
 
   const handlePatients = async () => {
+    setLoading(true)
     const employeeList = await getAllpatients(kit)
     setPatients(employeeList)
+    setLoading(false)
   }
 
   const getPinnedItems = async () => {
@@ -22,20 +28,14 @@ export default function TableList(): JSX.Element {
     setPinnedList(data)
   }
 
-  const truncate = (walletAddress: string) => {
-    const formated = walletAddress.substring(0, 10)
-    return `${formated}...`
-  }
-
   useEffect(() => {
     handlePatients()
     getPinnedItems()
   }, [kit])
-  
   return (
     <div>
-      <Patient/>
-      {pinnedList.length == 0 ? <div className='text-center text-xl'> No Patient added yet.</div> :
+          <div>
+          {loading ? <div className='text-center text-xl'>Fetching Patient data...</div> :
         <div className="flex flex-col">
           <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
@@ -44,31 +44,22 @@ export default function TableList(): JSX.Element {
                   <thead className="border-b font-medium dark:border-neutral-500">
                     <tr>
                       <th scope="col" className="px-6 py-4">SN</th>
-                      <th scope="col" className="px-6 py-4">Profile Pix</th>
-                      <th scope="col" className="px-6 py-4">Full Name</th>
-                      <th scope="col" className="px-6 py-4">Phone Number</th>
-                      {/* <th scope="col" className="px-6 py-4">Residential Address</th> */}
-                      <th scope="col" className="px-6 py-4">Gender</th>
-                      {/* <th scope="col" className="px-6 py-4">Marital Status</th> */}
                       <th scope="col" className="px-6 py-4">Wallet Address</th>
-                      {/* <th scope="col" className="px-6 py-4">Next of Kin Full Name</th>
-                    <th scope="col" className="px-6 py-4">Relationship with Next of Kin</th>
-                    <th scope="col" className="px-6 py-4">Full Name</th> */}
-                      <th scope="col" className="px-6 py-4">Next of Kin Contact</th>
+                      <th scope="col" className="px-6 py-4">IPFSH Hash</th>
+                      <th scope="col" className="px-6 py-4">Transaction Hash</th>
                       <th scope="col" className="px-6 py-4">Date Created</th>
+                      <th scope="col" className="px-6 py-4">Test Results</th>
                       <th scope="col" className="px-6 py-4">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {!pinnedList ? <div>Patients not yet added</div> : pinnedList.map((item, index) => <tr className="border-b dark:border-neutral-500" key={index}>
+                    {patients && patients.map((item, index) => <tr className="border-b dark:border-neutral-500" key={index}>
                       <td className="whitespace-nowrap px-6 py-4 font-medium">{index + 1}</td>
-                      <td className="whitespace-nowrap px-6 py-4 border rounded-full"><a href={`https://ipfs.io/ipfs/${item.ipfs_pin_hash}`}><Image src={`https://ipfs.io/ipfs/${item.ipfs_pin_hash}`} alt='pix' width={50} height={50} /></a></td>
-                      <td className="whitespace-nowrap px-6 py-4">{item.metadata.keyvalues['fullName']}</td>
-                      <td className="whitespace-nowrap px-6 py-4">{item.metadata.keyvalues['phoneNumber']}</td>
-                      <td className="whitespace-nowrap px-6 py-4">{item.metadata.keyvalues['gender']}</td>
-                      <td className="whitespace-nowrap px-6 py-4">{ truncate(item.metadata.keyvalues['patientWalletAddress'])}</td>
-                      <td className="whitespace-nowrap px-6 py-4">{item.metadata.keyvalues['kinContact']}</td>
-                      <td className="whitespace-nowrap px-6 py-4">{item.date_pinned}</td>
+                      <td className="whitespace-nowrap px-6 py-4"><a href={`https://explorer.celo.org/alfajores/address/${item.patientWalletAddress}`}></a> {truncate(item.patientWalletAddress)}</td>
+                      <td className="whitespace-nowrap px-6 py-4"> <a href={`https://ipfs.io/ipfs/${item.patientIPFSHash}`}>{truncate(item.patientIPFSHash)}</a></td>
+                      <td className="whitespace-nowrap px-6 py-4"><a href={"https://explorer.celo.org/alfajores/tx/" + item.txHash}>{truncate(item.txHash)}</a></td>
+                      <td className="whitespace-nowrap px-6 py-4">{ formateDateTime(item.dateCreated)}</td>
+                      <td className="whitespace-nowrap px-6 py-4">{item.reports}</td>
                       <td className="whitespace-nowrap px-6 py-4">
                         <button
                           type="button"
@@ -89,6 +80,7 @@ export default function TableList(): JSX.Element {
           </div>
         </div>
       }
-    </div>
+      </div>
+    </div>    
   )
 }

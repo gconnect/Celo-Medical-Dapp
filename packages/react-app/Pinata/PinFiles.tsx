@@ -40,7 +40,7 @@ export const pinFilesToPinata = async (image : string | File) => {
         }
       });
       console.log(res.data.IpfsHash);
-      const ipfshHash = "https://gateway.pinata.cloud/ipfs/" + res.data.IpfsHash
+      const ipfshHash = res.data.IpfsHash
       return {isSuccess: true, hash: ipfshHash}
     } catch (error) {
       console.log(error);
@@ -109,7 +109,7 @@ export const uploadJSONToIPFS = async (
           console.log(response.data.IpfsHash)
            return {
                isSuccess: true,
-               pinataURL: "https://gateway.pinata.cloud/ipfs/" + response.data.IpfsHash
+               pinataURL: response.data.IpfsHash
            };
         })
         .catch(function (error) {
