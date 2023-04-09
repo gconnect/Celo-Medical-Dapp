@@ -21,7 +21,7 @@ export default function PatientModal(): JSX.Element {
     const [blockMessage, setBlockMessage] = useState<any>()
     const [errorMessage, setErrorMessage] = useState<string>("")
     const { kit, address } = useCelo()
-   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files != null) {
           setSelectedImage(e.target.files[0]); 
           console.log(e.target.files[0])
@@ -61,13 +61,8 @@ export default function PatientModal(): JSX.Element {
         hash,
         fullName,
         phoneNumber,
-        residentialAddress,
-        gender,
-        cityState,
-        maritalStatus,
+        gender,      
         patientWalletAddress,
-        kinFullName,
-        relationshipWithKin,
         kinContact)
     
     setIPFSHASH(pinataURL)
@@ -78,7 +73,6 @@ export default function PatientModal(): JSX.Element {
     setBlockSuccess(sucesss)
     setData(data)
     setBlockMessage(message) 
-    setShowModal(false)
     
     await addHash(address, kit, data) 
     
