@@ -11,23 +11,13 @@ import Patient from '@/components/Patient';
 
 export default function Home() {
 
-  const { kit, address } = useCelo()
-  const [employees, setEmployees] = useState<any[]>([])
-
-   const handlePatients = async () => {
-    const employeeList = await getAllpatients(kit)
-    setEmployees(employeeList)
-  }
-
-  // useEffect(() => {
-  //   handlePatients()
-  // }, [])
-  //  console.log(address)
+  const { address } = useCelo()
+  
 
   return (
     <div>
       <div>
-          {!address ? <div>Please connect your wallet</div> :  address !== CONTRACTOWNER ? <Patient/> :
+          {!address ? <div>Please connect your wallet</div> :  address === CONTRACTOWNER ? <Patient/> :
         <div>
           <h1 className='text-4xl text-center m-4'>Decentralized Medical Record System</h1>
               <div className="flex justify-end ">

@@ -8,23 +8,6 @@ export const pinFilesToPinata = async (image : string | File) => {
     const formData = new FormData();
     
     formData.append('file', image)
-
-    // const metadata = JSON.stringify({
-    //   name: QUERYPRAM,
-    //   keyvalues: {
-    //     fullName,
-    //     phoneNumber,
-    //     // residentialAddress,
-    //     gender,
-    //     // cityState,
-    //     // maritalStatus,
-    //     patientWalletAddress,
-    //     // kinFullName,
-    //     // relationshipWithKin,
-    //     kinContact
-    //   }
-    // });
-    // formData.append('pinataMetadata', metadata);
     
     const options = JSON.stringify({
       cidVersion: 0,
@@ -53,13 +36,8 @@ export const uploadJSONToIPFS = async (
   image: string | undefined,
   fullName: string,
   phoneNumber: string,
-  residentialAddress: string,
   gender: string,
-  cityState: string,
-  maritalStatus: string,
   patientWalletAddress: string,
-  kinFullName: string,
-  relationshipWithKin: string,
   kinContact: string) => {
   
       let data = JSON.stringify({
@@ -72,13 +50,8 @@ export const uploadJSONToIPFS = async (
           image,
           fullName,
           phoneNumber,
-          // residentialAddress,
           gender,
-          // cityState,
-          // maritalStatus,
           patientWalletAddress,
-          // kinFullName,
-          // relationshipWithKin,
           kinContact
         }
       },
@@ -86,13 +59,8 @@ export const uploadJSONToIPFS = async (
         image,
         fullName,
         phoneNumber,
-        // residentialAddress,
         gender,
-        // cityState,
-        // maritalStatus,
         patientWalletAddress,
-        // kinFullName,
-        // relationshipWithKin,
         kinContact
       }
     });

@@ -1,23 +1,15 @@
 import React, {useState} from 'react'
-import { addPatient, addHash, getAllpatients } from '@/interact'
+import { addPatient, addHash } from '@/interact'
 import { useCelo } from '@celo/react-celo'
 import { pinFilesToPinata, uploadJSONToIPFS } from '@/Pinata/PinFiles'
-import { Label } from '@headlessui/react/dist/components/label/label'
-import { error } from 'console'
 import Alert from './Alert'
-import { QUERYPRAM } from '@/utils/Constants'
 
 
 export default function PatientModal(): JSX.Element {
     const [fullName, setFullName] = useState<string>('')
     const [phoneNumber, setPhoneNumber] = useState<string>('')
-    const [residentialAddress, setResidentialAddress] = useState<string>('')
     const [gender, setGender] = useState<string>('')
-    const [cityState, setCityState] = useState<string>('')
-    const [maritalStatus, setMaritalStatus] = useState<string>('')
     const [patientWalletAddress, setPatientWalletAddress] = useState<string>('')
-    const [kinFullName, setKinFullName] = useState<string>('')
-    const [relationshipWithKin, setRelationshipWithKin] = useState<string>('')
     const [kinContact, setKinContact] = useState<string>('')
     const [image, setSelectedImage] = useState<string | File>('')
     const [successState, setSuccess] = useState<boolean>(false)
@@ -27,9 +19,7 @@ export default function PatientModal(): JSX.Element {
     const [ipfsHashValue, setIPFSHASH] = useState<string>("")
     const [blockSuccess, setBlockSuccess] = useState<boolean>(false)
     const [blockMessage, setBlockMessage] = useState<any>()
-    const [showModal, setShowModal] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string>("")
-
     const { kit, address } = useCelo()
    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files != null) {
@@ -44,28 +34,13 @@ export default function PatientModal(): JSX.Element {
    const handlePhoneNumber = (e: React.FormEvent<HTMLInputElement>) => {
       setPhoneNumber(e.currentTarget.value)
    }
-   const handleResidentialAddress = (e: React.FormEvent<HTMLInputElement>) => {
-      setResidentialAddress(e.currentTarget.value)
-   }
+  
    const handleGender = (e: React.FormEvent<HTMLInputElement>) => {
       setGender(e.currentTarget.value)
    }
-   const handleCityState = (e: React.FormEvent<HTMLInputElement>) => {
-      setCityState(e.currentTarget.value)
-   }
-   const handleMaritalStatus = (e: React.FormEvent<HTMLInputElement>) => {
-      setMaritalStatus(e.currentTarget.value)
-   }
+
     const handlePatientWalletAddress = (e: React.FormEvent<HTMLInputElement>) => {
       setPatientWalletAddress(e.currentTarget.value)
-    }
-  
-   const handleKinFullName= (e: React.FormEvent<HTMLInputElement>) => {
-      setKinFullName(e.currentTarget.value)
-   }
-  
-    const handleRelationshipWithKin = (e: React.FormEvent<HTMLInputElement>) => {
-      setRelationshipWithKin(e.currentTarget.value)
     }
   
     const handleKinContact= (e: React.FormEvent<HTMLInputElement>) => {
@@ -170,17 +145,11 @@ export default function PatientModal(): JSX.Element {
               <input type="text" placeholder='Full Name' className='border-2 p-2 mt-2 rounded-md w-full' value={fullName} onChange={handleFullName} />
               <input type="tel" placeholder='Phone Number' className='border-2 p-2 mt-2 rounded-md w-full' value={phoneNumber} onChange={handlePhoneNumber} />
              <input type="text" placeholder='Gender' className='border-2 p-2 mt-2 rounded-md w-full' value={gender} onChange={handleGender}/>
-              {/* <input type="text" placeholder='Residential Address' className='border-2 p-2 mt-2 rounded-md w-full' value={residentialAddress} onChange={handleResidentialAddress}/>
-              <input type="text" placeholder='Gender' className='border-2 p-2 mt-2 rounded-md w-full' value={gender} onChange={handleGender}/>
-              <input type="text" placeholder='Enter City and State' className='border-2 p-2 mt-2 rounded-md w-full' value={cityState} onChange={handleCityState}/>
-              <input type="text" placeholder='marital Status' className='border-2 p-2 mt-2 rounded-md w-full' value={maritalStatus} onChange={handleMaritalStatus}/> */}
               <input type="text" placeholder='Patient Wallet Address' className='border-2 p-2 mt-2 rounded-md w-full' value={patientWalletAddress} onChange={handlePatientWalletAddress}/>
               <label className='my-2'>Upload Passport</label>
               <input type="file" placeholder='Upload Picture' className='border-2 p-2 mt-2 rounded-md w-full' onChange={handleImageUpload} />
 
               <label className='my-2'>Next of Kin Information</label>
-              {/* <input type="text" placeholder='Next of Kin Full Name' className='border-2 p-2 mt-2 rounded-md w-full' value={kinFullName} onChange={handleKinFullName} /> */}
-              {/* <input type="text" placeholder='Relationship With Next of Kin' className='border-2 p-2 mt-2 rounded-md w-full' value={relationshipWithKin} onChange={handleRelationshipWithKin}/> */}
               <input type="text" placeholder='Next of Kin Phone Contat' className='border-2 p-2 mt-2 rounded-md w-full' value={kinContact} onChange={handleKinContact}/>
               <p className='text-red-500'>{ errorMessage}</p>
             </div>

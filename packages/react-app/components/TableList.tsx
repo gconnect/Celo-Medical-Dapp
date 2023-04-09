@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useCelo } from '@celo/react-celo'
-import { getAllpatients, addPatientReport } from '@/interact'
+import { getAllpatients } from '@/interact'
 import UpdateModal from './UpdateModal'
 import { PatientList } from '@/Pinata/ListPin'
-import Image from 'next/image'
-import { CONTRACTOWNER, QUERYPRAM } from '@/utils/Constants'
-import Patient from './Patient'
+import { QUERYPRAM } from '@/utils/Constants'
 import { truncate } from '@/utils/truncate'
-import LoadingImage from "../public/images/loading.gif"
 import { formateDateTime } from '@/utils/formatDateTime'
 
 export default function TableList(): JSX.Element {
-  const { kit, address } = useCelo()
+  const { kit } = useCelo()
   const [patients, setPatients] = useState<any[]>([])
   const [pinnedList, setPinnedList] = useState<any[]>([])
   const [loading, setLoading] = useState<boolean>(false)
