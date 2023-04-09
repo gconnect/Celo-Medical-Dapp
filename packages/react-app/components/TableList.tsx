@@ -4,7 +4,7 @@ import { getAllpatients } from '@/interact'
 import UpdateModal from './UpdateModal'
 import { PatientList } from '@/Pinata/ListPin'
 import { QUERYPRAM } from '@/utils/Constants'
-import { truncate } from '@/utils/truncate'
+import { addComma, truncate } from '@/utils/truncate'
 import { formateDateTime } from '@/utils/formatDateTime'
 
 export default function TableList(): JSX.Element {
@@ -51,12 +51,12 @@ export default function TableList(): JSX.Element {
                   </thead>
                   <tbody>
                     {patients && patients.map((item, index) => <tr className="border-b dark:border-neutral-500" key={index}>
-                      <td className="whitespace-nowrap px-6 py-4 font-medium">{index + 1}</td>
+                      <td className="whitespace-nowrap px-6 py-4 font-medium">{item.id}</td>
                       <td className="whitespace-nowrap px-6 py-4"><a href={`https://explorer.celo.org/alfajores/address/${item.patientWalletAddress}`}></a> {truncate(item.patientWalletAddress)}</td>
                       <td className="whitespace-nowrap px-6 py-4"> <a href={`https://ipfs.io/ipfs/${item.patientIPFSHash}`}>{truncate(item.patientIPFSHash)}</a></td>
                       <td className="whitespace-nowrap px-6 py-4"><a href={"https://explorer.celo.org/alfajores/tx/" + item.txHash}>{truncate(item.txHash)}</a></td>
                       <td className="whitespace-nowrap px-6 py-4">{ formateDateTime(item.dateCreated)}</td>
-                      <td className="whitespace-nowrap px-6 py-4">{item.reports}</td>
+                      <td className="whitespace-nowrap px-6 py-4">{addComma(item.reports)}</td>
                       <td className="whitespace-nowrap px-6 py-4">
                         <button
                           type="button"

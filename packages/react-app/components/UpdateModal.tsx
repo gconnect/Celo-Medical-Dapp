@@ -28,7 +28,6 @@ export default function UpdateModal(param : Iparam): JSX.Element {
       data-te-modal-init
       className="fixed top-0 left-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
       id="updateModal"
-      tabIndex={-1}
       aria-labelledby="exampleModalCenterTitle"
       aria-modal="true"
       role="dialog">

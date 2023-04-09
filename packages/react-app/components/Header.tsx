@@ -6,6 +6,7 @@ import {
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Link from 'next/link'
+import { CONTRACTOWNER } from "@/utils/Constants";
 
 export default function Header() {
   const [data, setData] = useState<any>({})
@@ -24,7 +25,7 @@ export default function Header() {
         setComponentInitialized(true);
       }
     }, [initialised, kit]);
-
+    
     return (
       <Disclosure as="nav" className="bg-prosperity border-b border-black">
         {({ open }) => (
