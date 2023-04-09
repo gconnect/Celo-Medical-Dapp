@@ -6,12 +6,14 @@ import { PatientList } from '@/Pinata/ListPin'
 import { QUERYPRAM } from '@/utils/Constants'
 import { addComma, truncate } from '@/utils/truncate'
 import { formateDateTime } from '@/utils/formatDateTime'
+import ReportModal from './ReportModal'
 
 export default function TableList(): JSX.Element {
   const { kit } = useCelo()
   const [patients, setPatients] = useState<any[]>([])
   const [pinnedList, setPinnedList] = useState<any[]>([])
   const [loading, setLoading] = useState<boolean>(false)
+  const [showModal, setShowModal] = useState<boolean>()
 
   const handlePatients = async () => {
     setLoading(true)
@@ -59,6 +61,7 @@ export default function TableList(): JSX.Element {
                       <td className="whitespace-nowrap px-6 py-4">{addComma(item.reports)}</td>
                       <td className="whitespace-nowrap px-6 py-4">
                         <button
+                          onClick={() => setShowModal(true)}
                           type="button"
                           className="inline-block rounded bg-yellow-500 px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
                           data-te-toggle="modal"
@@ -68,7 +71,8 @@ export default function TableList(): JSX.Element {
                           Add Test Result
                         </button>
                       </td>
-                      <UpdateModal patientAddress={item.patientWalletAddress} />
+                      <UpdateModal patientAddress={ item.patientWalletAddress} />
+                      {/* <ReportModal show= {showModal}  onHide={() => setShowModal(false)} walletAddress={item.patientWalletAddress} /> */}
                     </tr>)}
                   </tbody>
                 </table>

@@ -1,5 +1,5 @@
-import React, {useState} from 'react'
-import { addPatient, addHash } from '@/interact'
+import React, {useCallback, useEffect, useState} from 'react'
+import { addPatient, addHash, getAllpatients } from '@/interact'
 import { useCelo } from '@celo/react-celo'
 import { pinFilesToPinata, uploadJSONToIPFS } from '@/Pinata/PinFiles'
 import Alert from './Alert'
@@ -20,7 +20,12 @@ export default function PatientModal(): JSX.Element {
     const [blockSuccess, setBlockSuccess] = useState<boolean>(false)
     const [blockMessage, setBlockMessage] = useState<any>()
     const [errorMessage, setErrorMessage] = useState<string>("")
-    const { kit, address } = useCelo()
+    const [updatedPatientList, seUpdatedPatientList] = useState<any[]>([])
+  const [showModal, setShowModal] = useState<boolean>(false)
+  
+  const { kit, address } = useCelo()
+  
+
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files != null) {
           setSelectedImage(e.target.files[0]); 
@@ -55,6 +60,7 @@ export default function PatientModal(): JSX.Element {
     }
 
     setLoading(true)
+    setShowModal(true)
     const { hash } = await pinFilesToPinata(image)
 
     const {isSuccess, error, pinataURL } = await uploadJSONToIPFS(
@@ -77,14 +83,15 @@ export default function PatientModal(): JSX.Element {
     await addHash(address, kit, data) 
     
     setLoading(false)
-
+    setShowModal(false)
       // window.location.reload()
     
-    if (document.getElementById('patientModal') != null) {
-        document.getElementById('patientModal').style.display = 'none'
-    }
+    // if (document.getElementById('patientModal') != null) {
+    //     document.getElementById('patientModal').style.display = 'none'
+    // }
 
   }
+  
   
   return (
     
@@ -95,11 +102,13 @@ export default function PatientModal(): JSX.Element {
       <Alert success={blockSuccess} error={blockMessage} data={dataValue} />
       </div> : null
       }
+      <div>
+        {showModal ? <div></div> : 
       <div
       data-te-modal-init
       className={"fixed top-0 left-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"}
       id="patientModal"
-      tabIndex={-1}
+      tabIndex={0}
       aria-labelledby="exampleModalCenterTitle"
       aria-modal="true" 
       role="dialog">
@@ -169,6 +178,8 @@ export default function PatientModal(): JSX.Element {
             </div>
           </div>
         </div>
+          </div>
+        }
       </div>
   </div>
   )

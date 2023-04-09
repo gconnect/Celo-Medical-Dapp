@@ -11,8 +11,13 @@ import Patient from '@/components/Patient';
 
 export default function Home() {
 
-  const { address } = useCelo()
-  
+  const { address, kit } = useCelo()
+
+  const updated = async ()  => await getAllpatients(kit)
+
+  useEffect(() => {
+    updated()
+  }, [])
 
   return (
     <div>

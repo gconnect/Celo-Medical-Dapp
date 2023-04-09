@@ -71,6 +71,7 @@ contract MedicalRecord {
         require(isExist[_patientWalletAddress] != true, "Patient record already exist");
         require(bytes(_patientIPFSHash).length > 0, "IPFS Hash required");
         uint256 _id = patientId.current();
+
         string[] memory arr;
         bytes32 txHash = blockhash(block.number);
         uint256 dateCreated = block.timestamp;

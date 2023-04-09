@@ -3,7 +3,7 @@ import React from 'react'
 interface IParam {
   success: boolean
   error: string,
-  data: string,
+  data: string | undefined,
 }
 export default function Alert(param: IParam): JSX.Element{
   return (
@@ -12,6 +12,7 @@ export default function Alert(param: IParam): JSX.Element{
         className={`mb-3 hidden w-full items-center rounded-lg px-6 py-5 text-base ${param.success ? "bg-green-100 text-green-700" : "text-danger-700 bg-danger-100" }  data-[te-alert-show]:inline-flex`}
         role="alert"
         data-te-alert-init
+        
         data-te-alert-show>
         {/* <strong className="mr-1">Holy guacamole! </strong> You should check in on
         some of those fields below. */}
