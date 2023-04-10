@@ -71,8 +71,8 @@ export default function TableList(): JSX.Element {
                           Add Test Result
                         </button>
                       </td>
-                      <UpdateModal patientAddress={ item.patientWalletAddress} />
-                      {/* <ReportModal show= {showModal}  onHide={() => setShowModal(false)} walletAddress={item.patientWalletAddress} /> */}
+                      {/* <UpdateModal patientAddress={ item.patientWalletAddress} /> */}
+                      <ReportModal show= {showModal}  onHide={() => setShowModal(false)} walletAddress={item.patientWalletAddress} />
                     </tr>)}
                   </tbody>
                 </table>

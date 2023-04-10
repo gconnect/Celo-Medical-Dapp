@@ -1,6 +1,7 @@
 import { QUERYPRAM } from "@/utils/Constants";
 import axios from "axios";
 import { JWT } from '@/utils/Constants';
+var FormData = require('form-data');
 
 
 // uploading image and extra meta data
