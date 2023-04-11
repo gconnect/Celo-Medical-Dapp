@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useCelo } from '@celo/react-celo'
 import { getAllpatients } from '@/interact'
 import UpdateModal from './UpdateModal'
-import { PatientList } from '@/Pinata/ListPin'
-import { QUERYPRAM } from '@/utils/Constants'
 import { addComma, truncate } from '@/utils/truncate'
 import { formateDateTime } from '@/utils/formatDateTime'
 import ReportModal from './ReportModal'
@@ -11,26 +9,20 @@ import ReportModal from './ReportModal'
 export default function TableList(): JSX.Element {
   const { kit } = useCelo()
   const [patients, setPatients] = useState<any[]>([])
-  const [pinnedList, setPinnedList] = useState<any[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [showModal, setShowModal] = useState<boolean>()
 
-  const handlePatients = async () => {
+  const handlePatients = useCallback(async () => {
     setLoading(true)
     const employeeList = await getAllpatients(kit)
     setPatients(employeeList)
     setLoading(false)
-  }
-
-  const getPinnedItems = async () => {
-    const data = await PatientList(QUERYPRAM)
-    setPinnedList(data)
-  }
-
+  }, [kit]) 
+  
   useEffect(() => {
-    handlePatients()
-    getPinnedItems()
-  }, [kit])
+   handlePatients()
+  }, [kit, handlePatients])
+  
   return (
     <div>
           <div>
@@ -71,8 +63,8 @@ export default function TableList(): JSX.Element {
                           Add Test Result
                         </button>
                       </td>
-                      {/* <UpdateModal patientAddress={ item.patientWalletAddress} /> */}
-                      <ReportModal show= {showModal}  onHide={() => setShowModal(false)} walletAddress={item.patientWalletAddress} />
+                      <UpdateModal patientAddress={ item.patientWalletAddress} />
+                      {/* <ReportModal show= {showModal}  onHide={() => setShowModal(false)} walletAddress={item.patientWalletAddress} /> */}
                     </tr>)}
                   </tbody>
                 </table>

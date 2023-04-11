@@ -73,7 +73,7 @@ export default function PatientModal(): JSX.Element {
     
     setIPFSHASH(pinataURL)
     setSuccess(isSuccess)
-    setMessage(error)
+    setMessage(error.message)
 
     const { sucesss, data, message} = await addPatient(address, kit, patientWalletAddress, pinataURL)
     setBlockSuccess(sucesss)

@@ -28,7 +28,7 @@ export const pinFilesToPinata = async (image : string | File) => {
       return {isSuccess: true, hash: ipfshHash}
     } catch (error) {
       console.log(error);
-     return {isSuccess: false, error: error.message}
+     return {isSuccess: false, error: error}
     }
   };
 
