@@ -12,8 +12,8 @@ export default function PatientModal(): JSX.Element {
     const [patientWalletAddress, setPatientWalletAddress] = useState<string>('')
     const [kinContact, setKinContact] = useState<string>('')
     const [image, setSelectedImage] = useState<string | File>('')
-    const [successState, setSuccess] = useState<boolean>(false)
-    const [message, setMessage] = useState<any>()
+    const [successState, setSuccess] = useState<boolean | undefined>(false)
+    const [msg, setMessage] = useState<any>()
     const [dataValue, setData] = useState<string | undefined>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [ipfsHashValue, setIPFSHASH] = useState<string>("")
@@ -73,7 +73,7 @@ export default function PatientModal(): JSX.Element {
     
     setIPFSHASH(pinataURL)
     setSuccess(isSuccess)
-    setMessage(error.message)
+    setMessage(error)
 
     const { sucesss, data, message} = await addPatient(address, kit, patientWalletAddress, pinataURL)
     setBlockSuccess(sucesss)
@@ -96,9 +96,9 @@ export default function PatientModal(): JSX.Element {
   return (
     
     <div>
-      {successState || blockSuccess || blockMessage || message ?
+      {successState || blockSuccess || blockMessage || msg ?
       <div>
-      <Alert success={successState} error={message} data={ipfsHashValue} />
+      <Alert success={successState} error={msg} data={ipfsHashValue} />
       <Alert success={blockSuccess} error={blockMessage} data={dataValue} />
       </div> : null
       }

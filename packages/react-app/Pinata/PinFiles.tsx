@@ -19,7 +19,7 @@ export const pinFilesToPinata = async (image : string | File) => {
       const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
         maxBodyLength: Infinity,
         headers: {
-          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+          'Content-Type': `multipart/form-data; boundary=${formData.getboundary}`,
           Authorization: JWT
         }
       });
@@ -67,26 +67,23 @@ export const uploadJSONToIPFS = async (
     });
     const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
     //making axios POST request to Pinata ⬇️
-    return axios 
+  try {
+    const response =  await axios 
         .post(url, data, {
           headers: {
                 'Content-Type': 'application/json',
                 Authorization: JWT
             }
         })
-      .then(function (response) {
-          console.log(response.data.IpfsHash)
-           return {
-               isSuccess: true,
-               pinataURL: response.data.IpfsHash
-           };
-        })
-        .catch(function (error) {
-            console.log(error)
-            return {
-                isSuccess: false,
-                error: error.message,
-            }
-
-    });
+    return {
+        isSuccess: true,
+        pinataURL: response.data.IpfsHash
+    }
+  } catch (error) {
+    console.log(error)
+    return {
+      error: error
+    }
+  }
+  
 };
