@@ -18,7 +18,7 @@ export default function PatientModal(): JSX.Element {
     const [loading, setLoading] = useState<boolean>(false)
     const [ipfsHashValue, setIPFSHASH] = useState<string>("")
     const [blockSuccess, setBlockSuccess] = useState<boolean>(false)
-    const [blockMessage, setBlockMessage] = useState<any>()
+    const [blockMessage, setBlockMessage] = useState<unknown>()
     const [errorMessage, setErrorMessage] = useState<string>("")
     const [updatedPatientList, seUpdatedPatientList] = useState<any[]>([])
   const [showModal, setShowModal] = useState<boolean>(false)
@@ -82,8 +82,9 @@ export default function PatientModal(): JSX.Element {
     
     await addHash(address, kit, data) 
     
-    setLoading(false)
-    setShowModal(false)
+
+      setLoading(false)
+      setShowModal(false)
       // window.location.reload()
     
     // if (document.getElementById('patientModal') != null) {
