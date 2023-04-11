@@ -2,7 +2,7 @@ import React from 'react'
 
 interface IParam {
   success: boolean | undefined
-  error: unknown,
+  error: any,
   data: string | undefined,
 }
 export default function Alert(param: IParam): JSX.Element{
