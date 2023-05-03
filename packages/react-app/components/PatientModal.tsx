@@ -21,6 +21,13 @@ export default function PatientModal(): JSX.Element {
     const [blockMessage, setBlockMessage] = useState<unknown>()
     const [errorMessage, setErrorMessage] = useState<string>("")
     const [updatedPatientList, seUpdatedPatientList] = useState<any[]>([])
+    const [residentialAddress, setPatientResidentialAddress] = useState<string>("")
+    const [maritalStatus, setMaritalStatus] = useState<string>("")
+    const [kFullName, setKinFullName] = useState<string>("")
+    const [relationshipWithKin, setRelationshipWithKin] = useState<string>("")
+
+    
+  
   const [showModal, setShowModal] = useState<boolean>(false)
   
   const { kit, address } = useCelo()
@@ -51,10 +58,24 @@ export default function PatientModal(): JSX.Element {
     const handleKinContact= (e: React.FormEvent<HTMLInputElement>) => {
       setKinContact(e.currentTarget.value)
     }
+  
+   const handlePatientResidentialAddress= (e: React.FormEvent<HTMLInputElement>) => {
+      setPatientResidentialAddress(e.currentTarget.value)
+    }
+     const handleKinFullName= (e: React.FormEvent<HTMLInputElement>) => {
+      setKinFullName(e.currentTarget.value)
+     }
+   const handleRelationshipWithKin= (e: React.FormEvent<HTMLInputElement>) => {
+      setRelationshipWithKin(e.currentTarget.value)
+   }
+   const handleMaritalStatus= (e: React.FormEvent<HTMLInputElement>) => {
+      setMaritalStatus(e.currentTarget.value)
+    }
 
   const handleAddPatient = async () => {
 
-    if (!fullName || !phoneNumber || !kinContact || !image || !gender || !patientWalletAddress) {
+    if (!fullName || !phoneNumber || !kinContact || !image || !gender || !patientWalletAddress ||
+      !maritalStatus || !residentialAddress || !kFullName || !relationshipWithKin) {
       setErrorMessage("All Fields are required")
       return;
     }
@@ -68,8 +89,13 @@ export default function PatientModal(): JSX.Element {
         fullName,
         phoneNumber,
         gender,      
-        patientWalletAddress,
-        kinContact)
+        patientWalletAddress,      
+        residentialAddress,
+        maritalStatus,
+        kFullName,
+        kinContact,
+        relationshipWithKin
+    )
     
     setIPFSHASH(pinataURL)
     setSuccess(isSuccess)
@@ -143,19 +169,29 @@ export default function PatientModal(): JSX.Element {
                     d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
-            </div>
-            <div className="relative p-4">
-              <label className='my-2'>Patient Information</label>
+                </div>
+            
+              <label className='my-2 mx-4'>Patient Information</label>
+              <div className="relative p-4 grid grid-cols-2">
               <input type="text" placeholder='Full Name' className='border-2 p-2 mt-2 rounded-md w-full' value={fullName} onChange={handleFullName} />
               <input type="tel" placeholder='Phone Number' className='border-2 p-2 mt-2 rounded-md w-full' value={phoneNumber} onChange={handlePhoneNumber} />
-             <input type="text" placeholder='Gender' className='border-2 p-2 mt-2 rounded-md w-full' value={gender} onChange={handleGender}/>
+              <input type="text" placeholder='Gender' className='border-2 p-2 mt-2 rounded-md w-full' value={gender} onChange={handleGender}/>
               <input type="text" placeholder='Patient Wallet Address' className='border-2 p-2 mt-2 rounded-md w-full' value={patientWalletAddress} onChange={handlePatientWalletAddress}/>
-              <label className='my-2'>Upload Passport</label>
-              <input type="file" placeholder='Upload Picture' className='border-2 p-2 mt-2 rounded-md w-full' onChange={handleImageUpload} />
-
-              <label className='my-2'>Next of Kin Information</label>
-              <input type="text" placeholder='Next of Kin Phone Contat' className='border-2 p-2 mt-2 rounded-md w-full' value={kinContact} onChange={handleKinContact}/>
-              <p className='text-red-500'>{ errorMessage}</p>
+              <input type="text" placeholder='Residential Address' className='border-2 p-2 mt-2 rounded-md w-full' value={residentialAddress} onChange={handlePatientResidentialAddress}/>
+              <input type="text" placeholder='Marital Status' className='border-2 p-2 mt-2 rounded-md w-full' value={maritalStatus} onChange={handleMaritalStatus}/>
+              
+              <div>
+                <label className='my-2'>Upload Passport</label>
+                <input type="file" placeholder='Upload Picture' className='border-2 p-2 mt-2 rounded-md w-full' onChange={handleImageUpload} />    
+                  </div>
+                <div>
+                  <label className='my-2'>Next of Kin Information</label>            
+                  <input type="text" placeholder='Next of Kin Full Name' className='border-2 p-2 mt-2 rounded-md w-full' value={kFullName} onChange={handleKinFullName}/>
+                </div>
+              
+                <input type="text" placeholder='Next of Kin Phone Contact' className='border-2 p-2 mt-2 rounded-md w-full' value={kinContact} onChange={handleKinContact}/>
+                <input type="text" placeholder='Relationship With Next of Kin' className='border-2 p-2 mt-2 rounded-md w-full' value={relationshipWithKin} onChange={handleRelationshipWithKin}/>
+                <p className='text-red-500'>{ errorMessage}</p>
             </div>
             <div
               className="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">

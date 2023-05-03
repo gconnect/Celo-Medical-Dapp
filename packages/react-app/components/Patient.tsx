@@ -1,15 +1,16 @@
 import React, {useState, useEffect, useCallback} from 'react'
 import axios from 'axios'
-import { getAllpatients } from '@/interact';
+import { getAllpatients, getPatientReport } from '@/interact';
 import { useCelo } from '@celo/react-celo';
 import Image from 'next/image';
+import { useQuery } from 'wagmi';
 
 export default function Patient(): JSX.Element {
   const [data, setData] = useState<any>()
   const [ipfsData, setIpfsData] = useState<any>()
   const [loading, setLoading] = useState<boolean>(false)
   const { kit, address } = useCelo()
-
+  
   const fetchPatientData = useCallback(async (patientIPFSHash : string) => {
     setLoading(true)
     // "https://gateway.pinata.cloud/ipfs/" +
@@ -60,8 +61,7 @@ export default function Patient(): JSX.Element {
               <p>{ipfsData.patientWalletAddress}</p>
               <p>{ipfsData.kinContact}</p> 
           </div>
-              }
-      
+        }  
     </div>
   )
 }

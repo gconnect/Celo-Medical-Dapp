@@ -45,7 +45,7 @@ export default function Alert(param: IParam): JSX.Element{
          }
         {/* {param.success ? param.data : param.error} */}
         {param.success ? <a href={param.data} className="font-bold text-green-800">{param.data}</a>
-        : param.error.toString()}
+        : param.error}
         
         <button
           type="button"

@@ -7,16 +7,21 @@ import PatientModal from '@/components/PatientModal';
 import TableList from '@/components/TableList';
 import { CONTRACTOWNER } from '@/utils/Constants';
 import Patient from '@/components/Patient';
-
+import Router from 'next/router';
 
 export default function Home() {
-
   const { address } = useCelo()
+ 
+   useEffect(() => {
+    if (address && address !== CONTRACTOWNER) {
+      Router.push(`/account/${address}`);
+    }
+  }, [address]);
 
   return (
     <div>
       <div>
-          {!address ? <div>Please connect your wallet</div> :  address !== CONTRACTOWNER ? <Patient/> :
+          {!address ? <div>Please connect your wallet</div> :  address !== CONTRACTOWNER ? <div></div> :
         <div>
           <h1 className='text-4xl text-center m-4'>Decentralized Medical Record System</h1>
               <div className="flex justify-end ">

@@ -1,4 +1,4 @@
-import { QUERYPRAM } from "@/utils/Constants";
+import { QUERYPRAM, TESTQUERYPRAM } from "@/utils/Constants";
 import axios from "axios";
 import { JWT } from '@/utils/Constants';
 var FormData = require('form-data');
@@ -31,15 +31,21 @@ export const pinFilesToPinata = async (image : string | File) => {
      return {isSuccess: false, error: error}
     }
   };
-
+  
 // Option 2 uploading json file
-export const uploadJSONToIPFS = async (
+export const uploadJSONToIPFS  = async ( 
   image: string | undefined,
   fullName: string,
   phoneNumber: string,
   gender: string,
   patientWalletAddress: string,
-  kinContact: string) => {
+  residentialAddress: string,
+  maritalStatus: string,
+  kFullName: string,
+  kinContact: string,
+  relationshipWithKin: string
+
+) => {
   
       let data = JSON.stringify({
       "pinataOptions": {
@@ -53,7 +59,11 @@ export const uploadJSONToIPFS = async (
           phoneNumber,
           gender,
           patientWalletAddress,
-          kinContact
+          residentialAddress,
+          maritalStatus,
+          kFullName,
+          kinContact,
+          relationshipWithKin
         }
       },
         "pinataContent": {
@@ -62,7 +72,57 @@ export const uploadJSONToIPFS = async (
         phoneNumber,
         gender,
         patientWalletAddress,
-        kinContact
+        residentialAddress,
+        maritalStatus,
+        kFullName,
+        kinContact,
+        relationshipWithKin
+      }
+    });
+    const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
+    //making axios POST request to Pinata ⬇️
+  try {
+    const response =  await axios 
+        .post(url, data, {
+          headers: {
+                'Content-Type': 'application/json',
+                Authorization: JWT
+            }
+        })
+    return {
+        isSuccess: true,
+        pinataURL: response.data.IpfsHash
+    }
+  } catch (error) {
+    console.log(error)
+    return {
+      error: error
+    }
+  }
+  
+};
+
+
+// Patient Test result
+export const uploadJSONTestResultToIPFS = async ( 
+  patientWalletAddress: string,
+  testResult: string,
+) => {
+  
+      let data = JSON.stringify({
+      "pinataOptions": {
+        "cidVersion": 1
+      },
+      "pinataMetadata": {
+        name: TESTQUERYPRAM,
+        keyvalues: {
+          patientWalletAddress,
+          testResult
+        }
+      },
+        "pinataContent": {
+         patientWalletAddress,
+         testResult
       }
     });
     const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;

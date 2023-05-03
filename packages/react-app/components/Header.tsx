@@ -46,7 +46,9 @@ export default function Header() {
                 <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                   <div className="flex flex-shrink-0 items-center">
                     {/* <Image className="block h-8 w-auto lg:block" src="/logo.svg" width="24" height="24" alt="Celo Logo" /> */}
-                    <h1>DMRS</h1>
+                    <Link href="/">
+                        <h1>DMRS</h1>
+                    </Link>
                   </div>
                   <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                     <Link href="/"

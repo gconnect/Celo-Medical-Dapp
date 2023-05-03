@@ -1,4 +1,5 @@
-const QUERYPRAM = "patients json"
+const TESTQUERYPRAM = "patientTesting"
+const QUERYPRAM = "patientRecord"
 const CONTRACTADDRESS = "0x9A5DFB9b88B6006862f1a56576d57C9a3e0E500F";
 const JWT = `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`
 const CONTRACTOWNER = "0x65645067615CAFCc37AB63ADEe2bc1231Fb257f3".toLocaleLowerCase()
@@ -6,5 +7,6 @@ export {
   QUERYPRAM,
   CONTRACTADDRESS,
   JWT,
-  CONTRACTOWNER
+  CONTRACTOWNER,
+  TESTQUERYPRAM
 }

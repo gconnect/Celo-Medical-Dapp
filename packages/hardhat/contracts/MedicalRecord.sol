@@ -128,11 +128,11 @@ contract MedicalRecord {
         patientReports.push(PatientMedicalReport(_patientWalletAddress, _testResult, txHash, dateCreated));
     }
 
-     function getPatientTestResults() public onlyOwner view returns(PatientMedicalReport [] memory){
+     function getPatientTestResults() public view returns(PatientMedicalReport [] memory){
         return patientReports;
     }
 
-    function getPatientReport(uint256 _index, address _patientAddress) public contractOwnerOrDataOwner(_patientAddress) view returns(address patientWalletAddress, string[] memory testResult, bytes32 _txHash, uint256 _dateCreated) {
+    function getPatientReport(uint256 _index) public  view returns(address patientWalletAddress, string[] memory testResult, bytes32 _txHash, uint256 _dateCreated) {
         return(
             patientReports[_index].patientWalletAddress,
             patients[_index].reports,

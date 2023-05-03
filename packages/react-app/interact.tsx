@@ -79,7 +79,7 @@ export const getPatientTestResults = async (kit: any) => {
   }
 }
 
-export const getPatientReport = async (kit: any, index: number, patientAddress: string) => {
+export const getPatientReport = async (kit: any, index: number, patientAddress: string | null |  undefined) => {
   try {
     const response = await initContract(kit).methods.getPatientReport(index, patientAddress).call()
     console.log(response)
