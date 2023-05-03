@@ -1,9 +1,9 @@
 import React, {useState} from 'react'
-import { addPatientReport } from '@/interact'
+import { addPatientReport, getAllpatients } from '@/interact'
 import { useCelo } from '@celo/react-celo'
 
 interface Iparam{
-  patientAddress: string
+  walletAddress: string
 }
 export default function UpdateModal(param : Iparam): JSX.Element {
   const [testResult, setTestResult] = useState<string>('')
@@ -17,17 +17,23 @@ export default function UpdateModal(param : Iparam): JSX.Element {
     e.preventDefault()
   }
 
-  const handlePatientReport = async (patientAddress: string) => {
+  const handlePatients = async () => {
+    await getAllpatients(kit)
+  }
+
+  const handlePatientReport = async () => {
     setShowModal(true)
     setLoading(true)
     if (!testResult) {
       alert("field is required")
       return
    }
-    await addPatientReport(address, kit, patientAddress, testResult)  
+    await addPatientReport(address, kit, param.walletAddress, testResult)  
     setShowModal(false)
     setLoading(false)
+    handlePatients()
   }
+
 
   return (
     <div>
@@ -85,7 +91,7 @@ export default function UpdateModal(param : Iparam): JSX.Element {
                   Close
                 </button>
                 <button
-                  onClick={() => handlePatientReport(param.patientAddress)}
+                  onClick={handlePatientReport}
                   type="button"
                   className="ml-1 inline-block rounded bg-primary px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
                   data-te-ripple-init

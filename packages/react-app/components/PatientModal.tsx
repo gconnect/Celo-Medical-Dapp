@@ -4,27 +4,34 @@ import { useCelo } from '@celo/react-celo'
 import { pinFilesToPinata, uploadJSONToIPFS } from '@/Pinata/PinFiles'
 import Alert from './Alert'
 
-
-export default function PatientModal(): JSX.Element {
+interface IParam{
+  action: () => void
+}
+export default function PatientModal({action} : IParam): JSX.Element {
     const [fullName, setFullName] = useState<string>('')
     const [phoneNumber, setPhoneNumber] = useState<string>('')
     const [gender, setGender] = useState<string>('')
     const [patientWalletAddress, setPatientWalletAddress] = useState<string>('')
     const [kinContact, setKinContact] = useState<string>('')
     const [image, setSelectedImage] = useState<string | File>('')
-    const [successState, setSuccess] = useState<boolean | undefined>(false)
-    const [msg, setMessage] = useState<any>()
     const [dataValue, setData] = useState<string | undefined>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [ipfsHashValue, setIPFSHASH] = useState<string>("")
     const [blockSuccess, setBlockSuccess] = useState<boolean>(false)
-    const [blockMessage, setBlockMessage] = useState<unknown>()
+    const [blockMessage, setBlockMessage] = useState<any>()
     const [errorMessage, setErrorMessage] = useState<string>("")
     const [updatedPatientList, seUpdatedPatientList] = useState<any[]>([])
     const [residentialAddress, setPatientResidentialAddress] = useState<string>("")
     const [maritalStatus, setMaritalStatus] = useState<string>("")
     const [kFullName, setKinFullName] = useState<string>("")
     const [relationshipWithKin, setRelationshipWithKin] = useState<string>("")
+    
+    const [successImage, setSuccessImage] = useState<boolean>(false)
+    const [hash, setHash] = useState<string>("")
+    const [imageError, setImageError] = useState<any>()
+  
+    const [successState, setSuccess] = useState<boolean | undefined>(false)
+    const [msg, setMessage] = useState<any>()
 
     
   
@@ -75,14 +82,18 @@ export default function PatientModal(): JSX.Element {
   const handleAddPatient = async () => {
 
     if (!fullName || !phoneNumber || !kinContact || !image || !gender || !patientWalletAddress ||
-      !maritalStatus || !residentialAddress || !kFullName || !relationshipWithKin) {
+      !maritalStatus || !residentialAddress || !kFullName) {
       setErrorMessage("All Fields are required")
       return;
     }
 
     setLoading(true)
-    setShowModal(true)
-    const { hash } = await pinFilesToPinata(image)
+    // setShowModal(true)
+
+    const { successImage, errorMessage, hash } = await pinFilesToPinata(image)
+    setSuccessImage(successImage)
+    setImageError(errorMessage)
+    setHash(hash)
 
     const {isSuccess, error, pinataURL } = await uploadJSONToIPFS(
         hash,
@@ -94,7 +105,7 @@ export default function PatientModal(): JSX.Element {
         maritalStatus,
         kFullName,
         kinContact,
-        relationshipWithKin
+        // relationshipWithKin
     )
     
     setIPFSHASH(pinataURL)
@@ -110,12 +121,13 @@ export default function PatientModal(): JSX.Element {
     
 
       setLoading(false)
-      setShowModal(false)
+      // setShowModal(false)
       // window.location.reload()
     
-    // if (document.getElementById('patientModal') != null) {
-    //     document.getElementById('patientModal').style.display = 'none'
-    // }
+    if (document.getElementById('patientModal') != null) {
+        document.getElementById('patientModal').style.display = 'none'
+    }
+    action()
 
   }
   
@@ -124,13 +136,14 @@ export default function PatientModal(): JSX.Element {
     
     <div>
       {successState || blockSuccess || blockMessage || msg ?
-      <div>
-      <Alert success={successState} error={msg} data={ipfsHashValue} />
-      <Alert success={blockSuccess} error={blockMessage} data={dataValue} />
+        <div>
+          <Alert success={successImage} error={imageError} data={hash} />
+          <Alert success={successState} error={msg} data={ipfsHashValue} />
+          <Alert success={blockSuccess} error={blockMessage} data={dataValue} />
+
       </div> : null
       }
       <div>
-        {showModal ? <div></div> : 
       <div
       data-te-modal-init
       className={"fixed top-0 left-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"}
@@ -190,7 +203,7 @@ export default function PatientModal(): JSX.Element {
                 </div>
               
                 <input type="text" placeholder='Next of Kin Phone Contact' className='border-2 p-2 mt-2 rounded-md w-full' value={kinContact} onChange={handleKinContact}/>
-                <input type="text" placeholder='Relationship With Next of Kin' className='border-2 p-2 mt-2 rounded-md w-full' value={relationshipWithKin} onChange={handleRelationshipWithKin}/>
+                {/* <input type="text" placeholder='Relationship With Next of Kin' className='border-2 p-2 mt-2 rounded-md w-full' value={relationshipWithKin} onChange={handleRelationshipWithKin}/> */}
                 <p className='text-red-500'>{ errorMessage}</p>
             </div>
             <div
@@ -216,7 +229,6 @@ export default function PatientModal(): JSX.Element {
           </div>
         </div>
           </div>
-        }
       </div>
   </div>
   )

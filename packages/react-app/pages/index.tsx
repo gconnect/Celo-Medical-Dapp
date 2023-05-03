@@ -1,4 +1,4 @@
-import React, { useState, useEffect  } from 'react'
+import React, { useState, useEffect, useCallback  } from 'react'
 import {
    getAllpatients
 } from '@/interact'
@@ -10,13 +10,27 @@ import Patient from '@/components/Patient';
 import Router from 'next/router';
 
 export default function Home() {
-  const { address } = useCelo()
- 
+  const { address, kit } = useCelo()
+   const [patients, setPatients] = useState<any[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
+
+  const handlePatients = useCallback(async () => {
+    setLoading(true)
+    const employeeList = await getAllpatients(kit)
+    setPatients(employeeList)
+    setLoading(false)
+  }, [kit]) 
+
+
    useEffect(() => {
     if (address && address !== CONTRACTOWNER) {
       Router.push(`/account/${address}`);
+    } else {
+      Router.push('/')
     }
-  }, [address]);
+    handlePatients()
+
+  }, [address, handlePatients]);
 
   return (
     <div>
@@ -36,8 +50,10 @@ export default function Home() {
             </button>
             </div>
             
-          <PatientModal />
-          <TableList/>
+            <PatientModal action={handlePatients} />
+            {loading ? <div className='text-center'> loading...</div> : 
+              <TableList patientList={patients}/>
+            }
         </div>      
     }
       </div>

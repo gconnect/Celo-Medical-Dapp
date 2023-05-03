@@ -6,27 +6,18 @@ import { addComma, truncate } from '@/utils/truncate'
 import { formateDateTime } from '@/utils/formatDateTime'
 import ReportModal from './ReportModal'
 
-export default function TableList(): JSX.Element {
+interface IParam{
+  patientList : any[]
+}
+export default function TableList({patientList} : IParam): JSX.Element {
   const { kit } = useCelo()
-  const [patients, setPatients] = useState<any[]>([])
-  const [loading, setLoading] = useState<boolean>(false)
+
   const [showModal, setShowModal] = useState<boolean>()
 
-  const handlePatients = useCallback(async () => {
-    setLoading(true)
-    const employeeList = await getAllpatients(kit)
-    setPatients(employeeList)
-    setLoading(false)
-  }, [kit]) 
-  
-  useEffect(() => {
-   handlePatients()
-  }, [kit, handlePatients])
   
   return (
     <div>
-          <div>
-          {loading ? <div className='text-center text-xl'>Fetching Patient data...</div> :
+      <div>
         <div className="flex flex-col">
           <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
@@ -44,7 +35,7 @@ export default function TableList(): JSX.Element {
                     </tr>
                   </thead>
                   <tbody>
-                    {patients && patients.map((item, index) => <tr className="border-b dark:border-neutral-500" key={index}>
+                    {patientList && patientList.map((item, index) => <tr className="border-b dark:border-neutral-500" key={index}>
                       <td className="whitespace-nowrap px-6 py-4 font-medium">{item.id}</td>
                       <td className="whitespace-nowrap px-6 py-4"><a href={`https://explorer.celo.org/alfajores/address/${item.patientWalletAddress}`}></a> {truncate(item.patientWalletAddress)}</td>
                       <td className="whitespace-nowrap px-6 py-4"> <a href={`https://ipfs.io/ipfs/${item.patientIPFSHash}`}>{truncate(item.patientIPFSHash)}</a></td>
@@ -63,7 +54,7 @@ export default function TableList(): JSX.Element {
                           Add Test Result
                         </button>
                       </td>
-                      <UpdateModal patientAddress={ item.patientWalletAddress} />
+                      <UpdateModal walletAddress={ item.patientWalletAddress} />
                       {/* <ReportModal show= {showModal}  onHide={() => setShowModal(false)} walletAddress={item.patientWalletAddress} /> */}
                     </tr>)}
                   </tbody>
@@ -72,7 +63,6 @@ export default function TableList(): JSX.Element {
             </div>
           </div>
         </div>
-      }
       </div>
     </div>    
   )

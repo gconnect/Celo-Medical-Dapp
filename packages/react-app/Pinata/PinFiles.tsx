@@ -25,10 +25,10 @@ export const pinFilesToPinata = async (image : string | File) => {
       });
       console.log(res.data.IpfsHash);
       const ipfshHash = res.data.IpfsHash
-      return {isSuccess: true, hash: ipfshHash}
-    } catch (error) {
+      return {successImage: true, hash: ipfshHash}
+    } catch (error : any) {
       console.log(error);
-     return {isSuccess: false, error: error}
+     return {successImage: false, errorMessage: error.message}
     }
   };
   
@@ -43,7 +43,7 @@ export const uploadJSONToIPFS  = async (
   maritalStatus: string,
   kFullName: string,
   kinContact: string,
-  relationshipWithKin: string
+  // relationshipWithKin: string
 
 ) => {
   
@@ -63,7 +63,7 @@ export const uploadJSONToIPFS  = async (
           maritalStatus,
           kFullName,
           kinContact,
-          relationshipWithKin
+          // relationshipWithKin
         }
       },
         "pinataContent": {
@@ -76,7 +76,7 @@ export const uploadJSONToIPFS  = async (
         maritalStatus,
         kFullName,
         kinContact,
-        relationshipWithKin
+        // relationshipWithKin
       }
     });
     const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
@@ -93,10 +93,10 @@ export const uploadJSONToIPFS  = async (
         isSuccess: true,
         pinataURL: response.data.IpfsHash
     }
-  } catch (error) {
+  } catch (error: any) {
     console.log(error)
     return {
-      error: error
+      error: error.message
     }
   }
   

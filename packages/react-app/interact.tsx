@@ -15,21 +15,21 @@ export const addPatient = async (address: string | null | undefined,
     })
     console.log(txHash)
     return {sucesss: true, data: txHash.transactionHash}
-  } catch (e) {
+  } catch (e : any) {
     console.log(e)
     return {sucesss: false, message: e.message}
   }
 }
 
 export const addPatientReport = async (address: string | null | undefined,
-  kit: any, patientAddress: string, testResult: string) => {
+  kit: any, walletAddress: string, testResult: string) => {
   try {
     const txHash = await initContract(kit).methods
-      .addPatientMedicalReport(patientAddress, testResult).send({
+      .addPatientMedicalReport(walletAddress, testResult).send({
     from: address,
     })
     console.log(txHash)
-    return {sucesss: true, data: "https://explorer.celo.org/alfajores/tx/" + txHash.transactionHash}
+    return {sucesss: true, data: txHash.transactionHash}
   } catch (e) {
     console.log(e)
   }
