@@ -4,17 +4,20 @@ import { useCelo } from '@celo/react-celo'
 
 interface Iparam{
   walletAddress: string
+  index: number
+  updateList: () => void
 }
-export default function UpdateModal(param : Iparam): JSX.Element {
+export default function UpdateModal({walletAddress, index, updateList} : Iparam): JSX.Element {
   const [testResult, setTestResult] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [showModal, setShowModal] = useState<boolean>()
+
   const { kit, address } = useCelo()
 
   const handleTestResult = (e: React.FormEvent<HTMLInputElement>) => {
-    setTestResult(e.currentTarget.value)
-    console.log(e.currentTarget.value)
     e.preventDefault()
+    setTestResult(e.currentTarget.value )
+    console.log(e.currentTarget.value)
   }
 
   const handlePatients = async () => {
@@ -22,29 +25,31 @@ export default function UpdateModal(param : Iparam): JSX.Element {
   }
 
   const handlePatientReport = async () => {
-    setShowModal(true)
+    // setShowModal(true)
     setLoading(true)
     if (!testResult) {
       alert("field is required")
       return
    }
-    await addPatientReport(address, kit, param.walletAddress, testResult)  
-    setShowModal(false)
+    await addPatientReport(address, kit, index, walletAddress, testResult)  
+    // setShowModal(false)
     setLoading(false)
-    handlePatients()
-  }
 
+    if (document.getElementById('updateModal') != null) {
+        document.getElementById('updateModal').style.display = 'none'
+    }
+    updateList()
+    setTestResult("")
+  }
 
   return (
     <div>
-      {showModal ? <div></div> :
         <div
           data-te-modal-init
           className="fixed top-0 left-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
           id="updateModal"
           aria-labelledby="exampleModalCenterTitle"
           aria-modal="true"
-          tabIndex={+ 1}
           role="dialog">
           <div
             data-te-modal-dialog-ref
@@ -55,7 +60,7 @@ export default function UpdateModal(param : Iparam): JSX.Element {
                 className="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
                 <h5
                   className="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
-                  id="exampleModalScrollableLabel">
+                  id="updateModal">
                   Patient Test Result
                 </h5>
                 <button
@@ -78,6 +83,7 @@ export default function UpdateModal(param : Iparam): JSX.Element {
                 </button>
               </div>
               <div className="relative p-4">
+              {/* <h1>{index} and {walletAddress}</h1> */}
                 <input type="text" placeholder='Enter test result' className='border-2 p-2 mt-2 rounded-md w-full' value={testResult} onChange={handleTestResult} />
               </div>
               <div
@@ -102,7 +108,6 @@ export default function UpdateModal(param : Iparam): JSX.Element {
             </div>
           </div>
         </div>
-      }
   </div>
   )
 }

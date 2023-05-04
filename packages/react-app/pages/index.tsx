@@ -23,11 +23,11 @@ export default function Home() {
 
 
    useEffect(() => {
-    if (address && address !== CONTRACTOWNER) {
-      Router.push(`/account/${address}`);
-    } else {
-      Router.push('/')
-    }
+    // if (address && address !== CONTRACTOWNER) {
+    //   Router.push(`/account/${address}`);
+    // } else {
+    //   Router.push('/')
+    // }
     handlePatients()
 
   }, [address, handlePatients]);
@@ -35,7 +35,7 @@ export default function Home() {
   return (
     <div>
       <div>
-          {!address ? <div>Please connect your wallet</div> :  address !== CONTRACTOWNER ? <div></div> :
+          {!address ? <div>Please connect your wallet</div> :  address !== CONTRACTOWNER ? <Patient/> :
         <div>
           <h1 className='text-4xl text-center m-4'>Decentralized Medical Record System</h1>
               <div className="flex justify-end ">

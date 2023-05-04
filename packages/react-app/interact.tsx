@@ -22,10 +22,10 @@ export const addPatient = async (address: string | null | undefined,
 }
 
 export const addPatientReport = async (address: string | null | undefined,
-  kit: any, walletAddress: string, testResult: string) => {
+  kit: any, index: number,walletAddress: string, testResult: string) => {
   try {
     const txHash = await initContract(kit).methods
-      .addPatientMedicalReport(walletAddress, testResult).send({
+      .addPatientMedicalReport( index, walletAddress, testResult).send({
     from: address,
     })
     console.log(txHash)
@@ -79,9 +79,9 @@ export const getPatientTestResults = async (kit: any) => {
   }
 }
 
-export const getPatientReport = async (kit: any, index: number, patientAddress: string | null |  undefined) => {
+export const getPatientReport = async (kit: any, patientAddress: string | null |  undefined) => {
   try {
-    const response = await initContract(kit).methods.getPatientReport(index, patientAddress).call()
+    const response = await initContract(kit).methods.getPatientReport(patientAddress).call()
     console.log(response)
     return response;
   } catch (e) {

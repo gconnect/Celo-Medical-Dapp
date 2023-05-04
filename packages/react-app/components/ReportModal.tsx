@@ -4,6 +4,7 @@ import { addPatientReport } from '@/interact';
 
 interface IParams {
   walletAddress: string;
+  id: number
   show: boolean | undefined;
   onHide: () => void;
 }
@@ -20,20 +21,21 @@ export default function ReportModal(param: IParams) {
     e.preventDefault()
   }
 
-  const handlePatientReport = async (patientAddress: string) => {
+  const handlePatientReport = async () => {
     setShowModal(true)
     setLoading(true)
     if (!testResult) {
       alert("field is required")
       return
    }
-    await addPatientReport(address, kit, patientAddress, testResult)  
+    await addPatientReport(address, kit, param.id,  param.walletAddress, testResult)  
     setShowModal(false)
     setLoading(false)
+    param.onHide()
   }
   return (
     <div>
-      {param.show ?
+      {param.show && param.show ?
         <div>
           <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-gray-900 bg-opacity-60 w-full h-full outline-none">
             <div className="relative lg:w-1/2 md:w-full sm:w-full my-6 mx-auto">
@@ -54,7 +56,7 @@ export default function ReportModal(param: IParams) {
                     <input type="text" placeholder='Enter test result' className='border-2 p-2 mt-2 rounded-md w-full' value={testResult} onChange={handleTestResult} />
                   </div>
                   <button
-                    onClick={() => handlePatientReport(param.walletAddress)}
+                    onClick={handlePatientReport}
                     type="button"
                     className="ml-1 inline-block rounded bg-primary px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
                     data-te-ripple-init

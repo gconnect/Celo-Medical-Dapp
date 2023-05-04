@@ -4,10 +4,13 @@ import { getAllpatients, getPatientReport } from '@/interact';
 import { useCelo } from '@celo/react-celo';
 import Image from 'next/image';
 import { useQuery } from 'wagmi';
+import { addComma } from '@/utils/truncate';
+import { get } from 'http';
 
 export default function Patient(): JSX.Element {
   const [data, setData] = useState<any>()
   const [ipfsData, setIpfsData] = useState<any>()
+  const [report, setReport] = useState<any>({})
   const [loading, setLoading] = useState<boolean>(false)
   const { kit, address } = useCelo()
   
@@ -17,6 +20,7 @@ export default function Patient(): JSX.Element {
     // const url2 = "https://ipfs.io/ipfs/bafkreicjmxc2drbgxtoidx6xfatbffyx46oiyo6ktipss6dhdermwtsoze"
     
     try {
+      setLoading(true)
       const response = await axios.get(`https://ipfs.io/ipfs/${patientIPFSHash}`)
       console.log("patient", response.data)
       setIpfsData(response.data)
@@ -30,17 +34,19 @@ export default function Patient(): JSX.Element {
   const getPatientInfo = useCallback(async () => {
     setLoading(true)
     const res = await getAllpatients(kit)
-    if (!address) {
-        return null
-    } else {
-      setLoading(false)
-      const value = res && res.find((item: any) => item.patientWalletAddress == address)
+    const value = res && res.find((item: any) => item.patientWalletAddress == address)
       if (value) {
         setData(value)
         await fetchPatientData(value.patientIPFSHash)
+        const medicalReport = await getPatientReport(kit, value.patientWalletAddress);
+        setReport(medicalReport)
+      } else {
+        setLoading(false)
+        return null
       }     
-    }
   }, [address, fetchPatientData, kit])
+
+  
   
   useEffect(() => {
     const fetchData = async () => {
@@ -52,14 +58,16 @@ export default function Patient(): JSX.Element {
   return (
     <div>
         {  
-        !data ? <div>No record found for you</div> : loading ? <div>loading...</div> :
-          <div>
+         loading ? <div>loading...</div> : !data  ? <div>No record found for you</div> :
+          <div className='text-lg'>
             <p>{`Welcome, ${ipfsData && ipfsData.fullName}`}</p> 
             <Image src={ `https://ipfs.io/ipfs/${ ipfsData &&ipfsData.image}`} alt="photo" width={100} height={ 100} />
               <p>{ipfsData.phoneNumber}</p>
               <p>{ipfsData.gender}</p>
               <p>{ipfsData.patientWalletAddress}</p>
-              <p>{ipfsData.kinContact}</p> 
+            <p>{ipfsData.kinContact}</p> 
+            <label className='font-bold'>Medical Reports:</label>
+            <p> {addComma(data.reports)}</p>
           </div>
         }  
     </div>

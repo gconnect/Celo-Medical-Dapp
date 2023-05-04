@@ -148,7 +148,6 @@ export default function PatientModal({action} : IParam): JSX.Element {
       data-te-modal-init
       className={"fixed top-0 left-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"}
       id="patientModal"
-      tabIndex={0}
       aria-labelledby="exampleModalCenterTitle"
       aria-modal="true" 
       role="dialog">

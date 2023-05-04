@@ -5,14 +5,26 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract MedicalRecord {
 
-    // using Counters for Counters.Counter;
-    // Counters.Counter public patientId;
+    struct PatientMedicalReport {
+        uint256 reportId;
+        address patientWalletAddress;
+        string testResult;
+        bytes32 txHash;
+        uint256 dateCreated;
+    }
+
+    event LogPatientMedicalReport(
+        address patientWalletAddress,
+        string testResult,
+        bytes32 txHash,
+        uint256 dateCreated
+    );
 
     struct PatientData {
         uint256 id;
         address patientWalletAddress;
         string patientIPFSHash;
-        string  reports;
+        string [] reports;
         bytes32 txHash;
         uint256 dateCreated;
     }
@@ -21,23 +33,6 @@ contract MedicalRecord {
         uint256 id,
         address patientWalletAddress,
         string patientIPFSHash,
-        bytes32 txHash,
-        uint256 dateCreated
-    );
-
-
-    struct PatientMedicalReport {
-        uint256 id;
-        address patientWalletAddress;
-        string testResult;
-        bytes32 txHash;
-        uint256 dateCreated;
-    }
-
-
-    event LogPatientMedicalReport(
-        address patientWalletAddress,
-        string testResult,
         bytes32 txHash,
         uint256 dateCreated
     );
@@ -72,11 +67,12 @@ contract MedicalRecord {
         ) public onlyOwner{
         require(!isExist[_patientWalletAddress], "Patient record already exist");
         require(bytes(_patientIPFSHash).length > 0, "IPFS Hash required");
-        PatientData storage patient = patientMap[msg.sender];
-        string memory arr;
+        PatientData storage patient = patientMap[_patientWalletAddress];
+        string[] memory arr;
         bytes32 txHash = blockhash(block.number);
         uint256 dateCreated = block.timestamp;
         patient.reports = arr;
+        patient.id = patientCount;
         patient.txHash = blockhash(block.number);
         patient.dateCreated = block.timestamp;
         patient.patientWalletAddress = _patientWalletAddress;
@@ -104,7 +100,7 @@ contract MedicalRecord {
         uint256 id,
         address patientWalletAddress,
         string memory patientIPFSHash,
-        string  memory testResult,
+        string [] memory testResult,
         bytes32 txHash,
         uint256 dateCreated
         ){
@@ -118,77 +114,37 @@ contract MedicalRecord {
             );
     }
 
-    // function addPatientMedicalReport(address _patientWalletAddress, string memory _testResult) public onlyOwner{
-    //     require(bytes(_testResult).length > 0, "Enter a valid test result");
-    //     bool patientExists = false;
-    //     bytes32 txHash = blockhash(block.number);
-    //     uint256 dateCreated = block.timestamp;
 
-    //     PatientMedicalReport storage report = reportMap[_patientWalletAddress];
-    //     report.patientWalletAddress  = _patientWalletAddress;
-    //     report.dateCreated = block.timestamp;
-    //     report.testResult = _testResult;
-    //     report.txHash = txHash;
-
-    //     for (uint256 i = 0; i < patients.length; i++) {
-    //     if (patients[i].patientWalletAddress == _patientWalletAddress) {
-    //         patientExists = true;
-    //         patients[i].reports.push(_testResult);
-    //         emit LogPatientMedicalReport(_patientWalletAddress, _testResult, txHash, dateCreated);
-    //         }
-    //     }
-
-    //     require(patientExists, "Patient record does not exist");
-    //     patientReports.push(PatientMedicalReport(reportCount, _patientWalletAddress, _testResult, txHash, dateCreated));
-    //     reportCount++;
-    // }
-
-    // function addPatientMedicalReport(address _patientWalletAddress, string memory _testResult) public onlyOwner {
-    //     require(bytes(_testResult).length > 0, "Enter a valid test result");
-
-    //     PatientMedicalReport storage report = reportMap[_patientWalletAddress];
-    //     if (report.patientWalletAddress == address(0)) {
-    //         reportCount++;
-    //         report.patientWalletAddress = _patientWalletAddress;
-    //         patientReports.push(report);
-    //     }
-
-    //     report.dateCreated = block.timestamp;
-    //     report.testResult = _testResult;
-    //     report.txHash = blockhash(block.number);
-
-    //     PatientData storage patient = patientMap[_patientWalletAddress];
-    //     bool patientExists;
-    //     for (uint256 i = 0; i < patients.length; i++) {
-    //         if (patients[i].patientWalletAddress == _patientWalletAddress) {
-    //             patient = patients[i];
-    //             patientExists = true;
-    //             break;
-    //         }
-    //     }
-
-    //     if (!patientExists) {
-    //         patient.patientWalletAddress = _patientWalletAddress;
-    //         patients.push(patient);
-    //     }
-
-    //     patient.reports.push(_testResult);
-    //     emit LogPatientMedicalReport(_patientWalletAddress, _testResult, report.txHash, report.dateCreated);
-    // }
-
-    function addPatientMedicalReport(address _address, string memory testResult) public{
+    function addPatientMedicalReport( uint256 index, address _address, string memory _testResult) public{
+        require(patientMap[_address].patientWalletAddress == _address, "Patient does not exist");
+        require(patients[index].patientWalletAddress == _address, "Address does. not correspond with the index");
         PatientData storage patient = patientMap[_address];
-        patient.reports = testResult;
+        patient.reports.push(_testResult);
+        patients[index].reports.push(_testResult);
+        bytes32 txHash = blockhash(block.number);
+
+        // store report data in the reportmap
+        PatientMedicalReport storage report = reportMap[_address];
+        report.reportId = reportCount;
+        report.patientWalletAddress = _address;
+        report.testResult = _testResult;
+        report.txHash = txHash;
+        report.dateCreated = block.timestamp;
+
+        patientReports.push(PatientMedicalReport(reportCount, _address, _testResult, txHash, block.timestamp));
+        reportCount++;
     }
 
-     function getPatientTestResults() public view returns(PatientMedicalReport [] memory){
+
+    function getPatientTestResults() public view returns(PatientMedicalReport [] memory){
         return patientReports;
     }
+
 
     function getPatientReport(address _patientAddress) public contractOwnerOrDataOwner(_patientAddress) 
      view returns(
         address patientWalletAddress, 
-        string memory testResult, 
+        string [] memory testResult, 
         bytes32 _txHash, 
         uint256 _dateCreated
         ) {
